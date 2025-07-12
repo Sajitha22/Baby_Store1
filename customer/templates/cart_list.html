@@ -1,0 +1,89 @@
+{% load static %}
+{% load offer_tags %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Your Cart - Baby Store</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to right, #fce3ec, #e0f7fa);
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .cart-card {
+      background-color: #fff;
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container mt-3">
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+</div>
+
+<div class="container my-5">
+  <h2 class="text-center text-primary mb-4">🛒 Your Shopping Cart</h2>
+
+  {% if cart_items %}
+    {% for item in cart_items %}
+      <div class="cart-card mb-3">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h5>{{ item.product.product_name }}</h5>
+            <form method="post" action="{% url 'update_cart_item' item.id %}" class="d-flex align-items-center mb-2">
+              {% csrf_token %}
+              <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control me-2" style="width: 80px;">
+              <button type="submit" class="btn btn-sm btn-primary">Update</button>
+            </form>
+
+            {% if item.discounted_price < item.product.price %}
+              <p class="text-danger fw-bold mb-1">
+                ₹ {{ item.discounted_price }} x {{ item.quantity }} = ₹ {{ item.total_price }}
+              </p>
+              <p class="text-muted text-decoration-line-through">₹ {{ item.product.price }} each</p>
+              <span class="badge bg-success">
+                {{ item.offer.discount }}% OFF
+              </span>
+            {% else %}
+              <p class="text-dark">
+                Price: ₹ {{ item.product.price }} x {{ item.quantity }} = ₹ {{ item.total_price }}
+              </p>
+            {% endif %}
+          </div>
+
+          <div class="text-end">
+            <form method="post" action="{% url 'remove_cart_item' item.id %}" onsubmit="return confirm('Remove this item?');">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-danger btn-sm">Remove</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+    <div class="cart-card">
+      <h5>Cart Summary</h5>
+      <p><strong>Total:</strong> ₹ {{ total }}</p>
+
+      <a href="{% url 'checkout' %}" class="btn btn-success w-100 mt-3">Checkout</a>
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center">🛍️ Your cart is empty.</div>
+  {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

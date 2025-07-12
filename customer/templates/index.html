@@ -1,0 +1,253 @@
+{% load static %}
+{% load offer_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Home - Baby Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background-color: #fefbff;
+      color: #333;
+      padding-top: 60px;
+    }
+
+    .navbar {
+      background-color: #fcdde1;
+      border-bottom: 2px solid #f9b8c4;
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      color: #d6336c;
+      font-size: 1.6rem;
+    }
+
+    .navbar .btn {
+      background-color: #d0ebff;
+      color: #1d5c85;
+      border: none;
+      margin-left: 0.5rem;
+    }
+
+    .navbar .btn:hover {
+      background-color: #a3d5f7;
+    }
+
+    .hero {
+      background-color: #fcdde1;
+      padding: 60px 0;
+      text-align: center;
+      border-radius: 8px;
+      margin-bottom: 40px;
+    }
+
+    .hero h1 {
+      font-size: 2.8rem;
+      color: #d6336c;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: #555;
+    }
+
+    .category-box {
+      background-color: #fff;
+      border: 2px solid #d0ebff;
+      border-radius: 10px;
+      padding: 25px;
+      text-align: center;
+      transition: 0.3s ease-in-out;
+    }
+
+    .category-box:hover {
+      background-color: #e8f6ff;
+    }
+
+    .category-box h5 {
+      color: #0b7285;
+      font-weight: 600;
+    }
+
+    .category-box .btn {
+      background-color: #d0ebff;
+      color: #1d5c85;
+      margin-top: 10px;
+    }
+
+    .category-box .btn:hover {
+      background-color: #a3d5f7;
+    }
+
+    .offer-zone-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #d6336c;
+      margin: 40px 0 30px;
+    }
+
+    .offer-zone {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+    }
+
+    .offer-card {
+      background-color: #fff;
+      border: 2px solid #fcdde1;
+      border-radius: 10px;
+      width: 260px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+    }
+
+    .offer-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .offer-card .card-body {
+      padding: 15px;
+      text-align: center;
+    }
+
+    .offer-card h5 {
+      font-size: 1.1rem;
+      color: #d6336c;
+      margin-bottom: 10px;
+    }
+
+    .offer-card .description {
+      font-size: 0.9rem;
+      color: #555;
+      min-height: 48px;
+    }
+
+    .price {
+      font-weight: bold;
+      color: #d6336c;
+      margin-bottom: 5px;
+    }
+
+    .price-original {
+      text-decoration: line-through;
+      color: #888;
+      font-size: 0.85rem;
+    }
+
+    .badge {
+      background-color: #63e6be;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .offer-card .btn {
+      background-color: #d0ebff;
+      color: #1d5c85;
+      margin-top: 10px;
+    }
+
+    .offer-card .btn:hover {
+      background-color: #a3d5f7;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px 0;
+      background-color: #d0ebff;
+      color: #1d5c85;
+      font-size: 0.9rem;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar fixed-top navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">Twinkle Tots BabyStore</a>
+      <div class="ms-auto d-flex">
+        <a href="{% url 'signup' %}" class="btn">Register</a>
+        <a href="{% url 'signin' %}" class="btn">Login</a>
+        
+        <a href="{% url 'cart_list' %}" class="btn">Cart</a>
+        <a href="{% url 'order_history' %}" class="btn">Orders</a>
+        <a href="{% url 'logout' %}" class="btn btn-outline-danger">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div class="hero container">
+    <h1>Welcome to Baby Store</h1>
+    <p>Explore our cutest baby products with care and love</p>
+  </div>
+
+  <!-- Categories -->
+  <div class="container mb-5">
+    <h3 class="text-center mb-4 text-primary">Shop by Category</h3>
+    <div class="row g-4 justify-content-center">
+      {% for category in categories %}
+      <div class="col-md-3 col-sm-6">
+        <div class="category-box">
+          <h5>{{ category.category_name }}</h5>
+          <a href="{% url 'category_products' category.id %}" class="btn btn-sm">View Products</a>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-center">No categories available at the moment.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Offer Zone -->
+  <div class="container">
+    <h3 class="offer-zone-title">🎁 Offer Zone</h3>
+    <div class="offer-zone">
+      {% for product in offer_products %}
+      <div class="offer-card">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.product_name }}">
+        {% else %}
+        <img src="{% static 'images/default_product.jpg' %}" alt="No Image">
+        {% endif %}
+        <div class="card-body">
+          <h5>{{ product.product_name }}</h5>
+          <p class="description">{{ product.description|truncatewords:12 }}</p>
+
+          {% get_offer product as active_offer %}
+          {% if active_offer %}
+          <p class="price">₹ {% get_discounted_price product %}</p>
+          <p class="price-original">₹ {{ product.price }}</p>
+          <span class="badge">{{ active_offer.discount }}% OFF</span>
+          {% else %}
+          <p class="price">₹ {{ product.price }}</p>
+          {% endif %}
+
+          <a href="{% url 'product_detail' product.id %}" class="btn btn-sm">View</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; {{ year|default:2025 }} BabyStore. All rights reserved.
+  </footer>
+
+</body>
+</html>

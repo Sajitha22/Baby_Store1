@@ -1,0 +1,164 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Checkout - Baby Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #fce3ec, #e0f7fa);
+      padding: 20px;
+    }
+
+    .container {
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      background-color: #04AA6D;
+      color: white;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      width: 100%;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background-color: #45a049;
+    }
+
+    .badge {
+      font-size: 0.8rem;
+    }
+
+    .checkout-title {
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2 class="text-center checkout-title">Checkout</h2>
+  <div class="row"> <!-- ✅ FIXED div -->
+
+    <!-- Billing Form -->
+    <div class="col-md-7">
+      <form action="" method="post">
+        {% csrf_token %}
+        <h4>Billing Details</h4>
+
+        <div class="mb-3">
+          <label>Full Name</label>
+          <input type="text" name="fullname" class="form-control" placeholder="John M. Doe">
+        </div>
+        <div class="mb-3">
+          <label>Email</label>
+          <input type="text" name="email" class="form-control" placeholder="john@example.com">
+        </div>
+        <div class="mb-3">
+          <label>Address</label>
+          <input type="text" name="address" class="form-control" placeholder="542 W. 15th Street">
+        </div>
+        <div class="mb-3">
+          <label>City</label>
+          <input type="text" name="city" class="form-control" placeholder="New York">
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label>State</label>
+            <input type="text" name="state" class="form-control" placeholder="NY">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label>Zip</label>
+            <input type="text" name="zip" class="form-control" placeholder="10001">
+          </div>
+        </div>
+
+        <h4>Payment</h4>
+        <div class="mb-3">
+          <label>Name on Card</label>
+          <input type="text" name="cardname" class="form-control" placeholder="John M. Doe">
+        </div>
+        <div class="mb-3">
+          <label>Card Number</label>
+          <input type="text" name="cardnumber" class="form-control" placeholder="1111-2222-3333-4444">
+        </div>
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label>Expiry Month</label>
+            <input type="text" name="expmonth" class="form-control" placeholder="September">
+          </div>
+          <div class="col-md-3 mb-3">
+            <label>Year</label>
+            <input type="text" name="expyear" class="form-control" placeholder="2026">
+          </div>
+          <div class="col-md-3 mb-3">
+            <label>CVV</label>
+            <input type="text" name="cvv" class="form-control" placeholder="123">
+          </div>
+        </div>
+
+        <input type="submit" value="Pay Now" class="btn">
+      </form>
+    </div>
+
+    <!-- Cart Summary -->
+    <div class="col-md-5">
+      <div class="bg-light p-3 rounded">
+        <h4>Order Summary</h4>
+        {% if cart_items %}
+        <table class="table table-bordered align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Product</th>
+              <th>Qty</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in cart_items %}
+            <tr>
+              <td>
+                <strong>{{ item.product.product_name }}</strong><br>
+                {% if item.offer %}
+                  <span class="text-danger fw-semibold">₹{{ item.discounted_price }}</span><br>
+                  <small class="text-muted text-decoration-line-through">₹{{ item.product.price }}</small><br>
+                  <span class="badge bg-success">{{ item.offer.discount }}% OFF</span>
+                {% else %}
+                <span>₹{{ item.product.price }}</span>
+                {% endif %}
+              </td>
+              <td class="text-center">{{ item.quantity }}</td>
+             
+              <td>₹{{ item.total_price|floatformat:2 }}</td>
+                
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <h5 class="text-end mt-3">Total: ₹{{ total|floatformat:2 }}</h5>
+        {% else %}
+        <div class="alert alert-info text-center">Your cart is empty.</div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

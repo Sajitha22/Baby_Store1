@@ -1,2 +1,3 @@
-web: gunicorn BabyStoreApplication.wsgi:application
+web: venv/bin/gunicorn BabyStoreApplication.wsgi:application
+
 
